@@ -118,7 +118,7 @@
             },
             getProfile() {
                 let js = {platform_id: this.platform_id};
-                this.$axios.post("/merchants/search-platform", js,
+                this.$axios.post("/merchants/search-borrower", js,
                     {
                         params: {access_token: localStorage.getItem('eleToken')}
                     }).then(res => {
