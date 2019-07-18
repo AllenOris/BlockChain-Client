@@ -71,7 +71,7 @@
                         link: "my-info",
                         icon: "el-icon-suitcase"
                     }, {
-                        name: '我的信息被查询记录',
+                        name: '信息被查询记录',
                         link: "my-queried",
                         icon: "el-icon-document"
                     },

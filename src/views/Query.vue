@@ -8,7 +8,7 @@
             </el-breadcrumb>
         </div>
         <div style="margin: 20px 0;"></div>
-        <el-card style="margin: 20px;width: 100%;">>
+        <el-card style="margin: 20px;width: 100%;">
             <el-button @click="refresh">刷新</el-button>
             <div style="margin: 20px 0;"></div>
             <el-table
@@ -53,9 +53,13 @@
                 let aim = localStorage.getItem('aim');
                 let js = {id: wantID, aim: aim};
                 if (userType === 1) {
-                    this.$axios.post("/platforms/search-specific", js).then(res => {
+                    this.$axios.post("/platforms/search-specific", js,
+                        {
+                            params: {access_token: localStorage.getItem('eleToken')}
+                        }).then(res => {
                         // 登录成功
                         if (res.data.code * 1 === 0) {
+                            this.tableData.value = [];
                             this.$message({message: "查询成功", type: "success"});
                             console.log(res.data);
                             let data = res.data.data;
@@ -68,13 +72,16 @@
                             this.tableData.value.push(data.card_number);
                             this.$message('查询成功,您的查询行为已被记入区块链网络')
                         } else {
-                            this.$message.error(res.data.message);
+                            this.$message.error(res.data.msg);
                         }
                     }, err => {
                         this.$message.error(err.message);
                     });
                 } else if (userType === 2) {
-                    this.$axios.post("/merchants/search-platform", js).then(res => {
+                    this.$axios.post("/merchants/search-platform", js,
+                        {
+                            params: {access_token: localStorage.getItem('eleToken')}
+                        }).then(res => {
                         // 登录成功
                         if (res.data.code * 1 === 0) {
                             this.$message({message: "查询成功", type: "success"});
@@ -88,12 +95,15 @@
                             this.tableData.value.push(data.card_number);
                             this.$message('查询成功,您的查询行为已被记入区块链网络')
                         } else {
-                            this.$message.error(res.data.message);
+                            this.$message.error(res.data.msg);
                         }
                     }, err => {
                         this.$message.error(err.message);
                     });
                 }
+            },
+            refresh() {
+                this.getProfile();
             },
         }
     }

@@ -8,7 +8,7 @@
             </el-breadcrumb>
         </div>
         <div style="margin: 20px 0;"></div>
-        <el-card style="margin: 20px;width: 100%;">>
+        <el-card style="margin: 20px;width: 100%;">
             <el-button @click="refresh">刷新</el-button>
             <div style="margin: 20px 0;"></div>
             <el-table
@@ -51,13 +51,17 @@
         methods: {
             handleCheck(row) {
                 localStorage.setItem('wantPlatform', row.id);
-                this.$router.push('/MyOwnPlatform/client');
+                this.$router.push('/my-own-platform/client');
             },
             getProfile() {
                 let js = {};
-                this.$axios.post("/merchants/search-platform", js).then(res => {
+                this.$axios.post("/merchants/search-platform", js,
+                    {
+                        params: {access_token: localStorage.getItem('eleToken')}
+                    }).then(res => {
                     // 登录成功
                     if (res.data.code * 1 === 0) {
+                        this.tableData = [];
                         this.$message({message: "查询成功", type: "success"});
                         console.log(res.data);
                         for (let i = 0; i < res.data.data.length; ++i) {
@@ -68,11 +72,14 @@
                         }
                         // this.$router.push("/myfile");
                     } else {
-                        this.$message.error(res.data.message);
+                        this.$message.error(res.data.msg);
                     }
                 }, err => {
                     this.$message.error(err.message);
                 });
+            },
+            refresh(){
+                this.getProfile();
             },
         }
     }

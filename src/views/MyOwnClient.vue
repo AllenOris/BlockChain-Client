@@ -9,7 +9,7 @@
             </el-breadcrumb>
         </div>
         <div style="margin: 20px 0;"></div>
-        <el-card style="margin: 20px;width: 100%;">>
+        <el-card style="margin: 20px;width: 100%;">
             <el-button @click="refresh">刷新</el-button>
             <div style="margin: 20px 0;"></div>
             <el-table
@@ -40,7 +40,7 @@
                 :visible.sync="dialogVisible1"
                 width="30%"
         >
-            <span>您将要查询{{wantID}}}用户的个人隐私信息,您的行为将会计入区块链中,是否继续?</span>
+            <p class="big">您将要查询{{wantID}}用户的个人隐私信息,您的行为将会计入区块链中<br>是否继续?</p>
             <span slot="footer" class="dialog-footer">
                 <el-button @click="dialogVisible1 = false">取 消</el-button>
                 <el-button type="primary" @click="handleClickDialog1">继 续</el-button>
@@ -90,7 +90,10 @@
                     aim: [
                         {required: true, message: "不能为空", trigger: "blur"},
                     ]
-                }
+                },
+                models: [],
+                sql: '',
+                row: [],
             }
         },
         created() {
@@ -103,7 +106,7 @@
                 this.dialogVisible1 = true;
             },
             handleClick() {
-                this.message('查询中');
+                this.$message('查询中');
                 this.dialogVisible2 = false;
                 localStorage.setItem("wantID", this.wantID);
                 localStorage.setItem("aim", this.form.aim);
@@ -115,7 +118,10 @@
             },
             getProfile() {
                 let js = {platform_id: this.platform_id};
-                this.$axios.post("/merchants/search-platform", js).then(res => {
+                this.$axios.post("/merchants/search-platform", js,
+                    {
+                        params: {access_token: localStorage.getItem('eleToken')}
+                    }).then(res => {
                     // 登录成功
                     if (res.data.code * 1 === 0) {
                         this.$message({message: "查询成功", type: "success"});
@@ -128,7 +134,7 @@
                             });
                         }
                     } else {
-                        this.$message.error(res.data.message);
+                        this.$message.error(res.data.msg);
                     }
                 }, err => {
                     this.$message.error(err.message);
@@ -157,7 +163,13 @@
             }
             ,
             handleSelect(item) {
-            }
+            },
+            refresh(){
+                this.getProfile();
+            },
+        },
+        mounted() {
+            this.models = this.loadAll();
         }
     }
 </script>
@@ -168,5 +180,12 @@
         height: 100%;
         padding: 16px;
         box-sizing: border-box;
+    }
+    p.small {
+        line-height: 90%
+    }
+
+    p.big {
+        line-height: 200%
     }
 </style>

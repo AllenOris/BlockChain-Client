@@ -81,9 +81,35 @@
             if (t === 1) {
                 this.$message.error('请先登录');
             }
+            this.$notify({
+                title: '测试账户1(借贷方)',
+                dangerouslyUseHTMLString: true,
+                message: 'ID : 1042120<br>密码 : u0IPNY',
+                duration: 15000,
+                type: 'warning'
+            });
+            // clearTimeout(t);
+            // setTimeout(function () {
+            this.$notify({
+                title: '测试账户2(平台方)',
+                dangerouslyUseHTMLString: true,
+                message: 'ID : 1105965<br>密码 : dLO21D',
+                duration: 15000,
+                type: 'success',
+                offset: 100,
+            });
+            this.$notify({
+                title: '测试账户3(资金方)',
+                dangerouslyUseHTMLString: true,
+                message: 'ID : 1052596<br>密码 : hGc318',
+                duration: 15000,
+                type: "info",
+                offset: 200,
+            });
         },
         methods: {
             submitForm(formName) {
+                localStorage.removeItem('eleToken');
                 let name = this.loginUser.name;
                 let password = this.loginUser.password;
                 console.log(this.loginUser, name, password);
@@ -93,48 +119,54 @@
                             id: this.loginUser.name,
                             password: this.loginUser.password
                         };
-                        // js = qs.stringify({
-                        //     params: js
-                        // });
+                        console.log(this.loginUser);
                         localStorage.setItem('userType', this.loginUser.userType);
                         if (this.loginUser.userType * 1 === 0) {
                             this.$axios.post("/borrowers/login", js).then(res => {
-                                // 登录成功
-                                console.log(res);
-                                const token = res.data.access_token;
-                                localStorage.setItem('eleToken', token);
-                                console.log("storage:", localStorage);
                                 if (res.data.code * 1 === 0) {
+                                    // 登录成功
+                                    const token = res.data.data['access-token'];
+                                    console.log("res:", res.data, token);
+                                    localStorage.setItem('eleToken', token);
+                                    console.log("storage:", localStorage);
                                     this.$message({message: "登陆成功", type: "success"});
-                                    this.$router.push("/myfile");
+                                    this.$router.push("/my-platform");
                                 } else {
-                                    this.$message.error(res.data.message);
+                                    this.$message.error(res.data.msg);
                                 }
                             }, err => {
                                 this.$message.error(err.message);
                             });
                         } else if (this.loginUser.userType * 1 === 1) {
                             this.$axios.post("/platforms/login", js).then(res => {
-                                // 登录成功
-                                const {token} = res.data;
+
                                 if (res.data.code * 1 === 0) {
+                                    // 登录成功
+                                    const token = res.data.data['access-token'];
+                                    console.log("res:", res.data, token);
+                                    localStorage.setItem('eleToken', token);
+                                    console.log("storage:", localStorage);
                                     this.$message({message: "登陆成功", type: "success"});
-                                    this.$router.push("/myfile");
+                                    this.$router.push("/my-client");
                                 } else {
-                                    this.$message.error(res.data.message);
+                                    this.$message.error(res.data.msg);
                                 }
                             }, err => {
                                 this.$message.error(err.message);
                             });
                         } else {
                             this.$axios.post("/merchants/login", js).then(res => {
-                                // 登录成功
-                                const {token} = res.data;
+
                                 if (res.data.code * 1 === 0) {
+                                    // 登录成功
+                                    const token = res.data.data['access-token'];
+                                    console.log("res:", res.data, token);
+                                    localStorage.setItem('eleToken', token);
+                                    console.log("storage:", localStorage);
                                     this.$message({message: "登陆成功", type: "success"});
-                                    this.$router.push("/myfile");
+                                    this.$router.push("/my-own-platform");
                                 } else {
-                                    this.$message.error(res.data.message);
+                                    this.$message.error(res.data.msg);
                                 }
                             }, err => {
                                 this.$message.error(err.message);
@@ -156,7 +188,10 @@
                     (typeof value === "object" && Object.keys(value).length === 0) ||
                     (typeof value === "string" && value.trim().length === 0)
                 );
-            }
+            },
+            refresh() {
+                this.getProfile();
+            },
         }
     };
 </script>
