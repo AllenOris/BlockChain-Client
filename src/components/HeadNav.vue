@@ -4,13 +4,8 @@
             <el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal" @select="handleSelect">
                 <el-menu-item index='0'>
                     <!--                    <img src="../assets/logo.png" class='logo' alt="">-->
-                    <span class='title'>数微云</span></el-menu-item>
-                <el-menu-item style="float:left" index='1'>业务</el-menu-item>
-                <el-menu-item style="float:left" index='2'>客户</el-menu-item>
-                <el-menu-item style="float:left" index='3'>合作方</el-menu-item>
-                <el-menu-item style="float:left" index='4'>产品</el-menu-item>
-                <el-menu-item style="float:left" index='5'>风控</el-menu-item>
-                <el-menu-item style="float:left" index='6'>报表</el-menu-item>
+                    <span class='title'>区块链Demo</span></el-menu-item>
+                <el-menu-item style="float:left" index='1'>{{Head}}</el-menu-item>
                 <el-menu-item style="float:right" index=3>
                     <el-button type="primary" icon="el-icon-user-solid" @click="logout">退出登陆</el-button>
                 </el-menu-item>
@@ -27,7 +22,7 @@
                             active-text-color="#409eff"
                             class="el-menu-vertical-demo"
                     >
-                        <div v-if="permission===1">
+                        <div v-if="userType===0">
                             <router-link v-for="menu in leftBarMenu" :to=menu.link>
                                 <el-menu-item index=index>
                                     <i :class="menu.icon"></i>
@@ -35,8 +30,16 @@
                                 </el-menu-item>
                             </router-link>
                         </div>
-                        <div v-else>
+                        <div v-else-if="userType===1">
                             <router-link v-for="menu in leftBarMenu2" :to=menu.link>
+                                <el-menu-item index=index>
+                                    <i :class="menu.icon"></i>
+                                    <span slot="title">{{menu.name}}</span>
+                                </el-menu-item>
+                            </router-link>
+                        </div>
+                        <div v-else-if="userType===2">
+                            <router-link v-for="menu in leftBarMenu3" :to=menu.link>
                                 <el-menu-item index=index>
                                     <i :class="menu.icon"></i>
                                     <span slot="title">{{menu.name}}</span>
@@ -54,76 +57,57 @@
         name: "head-nav",
         data() {
             return {
+                Head: "",
                 activeIndex: '1',
                 permission: 2, //用户类型
-                userType: 1,
+                userType: 0,
                 leftBarMenu: [
                     {
-                        name: "待办业务",
-                        link: "history",
+                        name: "我的借贷平台",
+                        link: "my-platform",
                         icon: "el-icon-time"
                     }, {
-                        name: "贷款业务",
-                        link: "404",
+                        name: "我的个人信息",
+                        link: "my-info",
                         icon: "el-icon-suitcase"
                     }, {
-                        name: '还款申请',
-                        link: "404",
+                        name: '我的信息被查询记录',
+                        link: "my-queried",
                         icon: "el-icon-document"
-                    }, {
-                        name: '放款支付',
-                        link: "404",
-                        icon:"el-icon-money"
-                    }
-                    , {
-                        name: '被拒业务',
-                        link: "404",
-                        icon:"el-icon-remove-outline"
-                    }
+                    },
                 ],
                 leftBarMenu2: [
                     {
-                        name: "待办业务",
-                        link: "todo",
+                        name: "我的客户",
+                        link: "my-client",
                         icon: "el-icon-time"
-                    }, {
-                        name: "已处理业务",
-                        link: "done",
-                        icon: "el-icon-suitcase"
-                    }, {
-                        name: "全部业务",
-                        link: "404",
-                        icon: "el-icon-document"
                     },
+                    {
+                        name: "给我注资的商户",
+                        link: "my-merchant",
+                        icon: "el-icon-suitcase"
+                    },
+                ],
+                leftBarMenu3: [
+                    {
+                        name: "我注资的平台",
+                        link: "my-own-platform",
+                        icon: "el-icon-suitcase"
+                    }
                 ],
             };
         },
         created() {
-            this.$axios.get("/api/users/type").then(res => {
-                // console.log(res);
-                if (res.data.code*1 === 0) {
-                    this.permission = res.data.data.type * 1;
-                    if(this.permission===1)this.$router.push('/history');
-                    else this.$router.push('/todo');
-                } else {
-                    this.$message.error(res.data.message);
-                }
-            }, err => {
-                this.$message.error(err.message);
-            });
+            this.userType = localStorage.getItem('userType') * 1;
+            this.Head = this.userType === 0 ? '借贷方' : this.userType === 1 ? '平台方' : '商户方';
         },
         methods: {
             handleSelect(key, keyPath) {
 
             },
             logout() {
-                this.$axios.get("/api/users/logout").then(res => {
-                    if (res.data.code *1=== 0) {
-                        this.$message({message: "退出成功", type: "success"});
-                    } else {
-                        this.$message.error(res.data.message);
-                    }
-                });
+                localStorage.setItem('eleToken', "");
+                this.$message({message: "退出成功", type: "success"});
                 this.$router.push('/login');
             }
         }

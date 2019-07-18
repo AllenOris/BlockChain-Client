@@ -5,7 +5,7 @@
                 <span class="title">区块链借贷系统</span>
             </div>
             <el-form :model="loginUser" :rules="rules" ref="loginForm" class="loginForm" label-width="80px">
-                <el-form-item label="用户ID" prop="name">
+                <el-form-item label="用户名" prop="name">
                     <el-input v-model="loginUser.name" placeholder="请输入用户名"></el-input>
                 </el-form-item>
                 <el-form-item label="密码" prop="password" @keyup.enter.native="submitForm('loginForm')">

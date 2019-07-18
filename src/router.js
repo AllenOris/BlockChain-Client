@@ -1,23 +1,20 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import Index from './views/Index.vue'
-import Register from './views/Register'
 import Notfind from './views/404'
 import Login from './views/Login'
 import Home from './views/Home'
-import InfoShow from './views/InfoShow'
-import Myfile from './views/Myfile'
-import Upload from './views/Upload'
-import MyDownload from './views/MyDownload'
-import Examine from './views/Examine'
-import Test from './views/Test'
-import Recent from './views/Recent'
-import History from './views/History'
-import Todo from './views/Todo'
-import Detail from './views/Detail'
-import Done from './views/Done'
-import DetailDone from './views/Detail_Done'
+import MyClient from './views/MyClient'
+import MyInfo from './views/MyInfo'
+import MyOwnPlatform from './views/MyOwnPlatform'
+import MyOwnClient from './views/MyOwnClient'
+import MyPlatform from './views/MyPlatform'
+import MyQueried from './views/MyQueried'
+import Query from './views/Query'
+import MyMerchant from './views/MyMerchant'
+import ElementUI from 'element-ui';
 
+Vue.use(ElementUI);
 Vue.use(Router);
 
 const router = new Router({
@@ -26,7 +23,6 @@ const router = new Router({
     routes: [
         {path: '*', name: '/404', component: Notfind},
         {path: '/', redirect: '/login'},
-        {path: '/register', name: 'register', component: Register},
         {path: '/login', name: 'login', component: Login},
         {
             path: '/index',
@@ -35,18 +31,14 @@ const router = new Router({
             children: [
                 {path: '', component: Home},
                 {path: '/home', name: 'home', component: Home},
-                {path: '/infoshow', name: 'infoshow', component: InfoShow},
-                {path: '/myfile', name: 'myfile', component: Myfile},
-                {path: '/upload', name: 'upload', component: Upload},
-                {path: '/mydownload', name: 'MyDownload', component: MyDownload},
-                {path: '/examine', name: 'Examine', component: Examine},
-                {path: '/test', name: 'Test', component: Test},
-                {path: '/recent', name: 'Recent', component: Recent},
-                {path: '/history', name: 'history', component: History},
-                {path: '/todo', name: 'todo', component: Todo},
-                {path: '/detail', name: 'detail', component: Detail},
-                {path: '/done', name: 'done', component: Done},
-                {path: '/detail/done', name: 'detailDone', component: DetailDone},
+                {path: '/my-client', name: 'MyClient', component: MyClient},
+                {path: '/my-info', name: 'MyInfo', component: MyInfo},
+                {path: '/my-own-platform', name: 'MyOwnPlatform', component: MyOwnPlatform},
+                {path: '/my-platform', name: 'MyPlatform', component: MyPlatform},
+                {path: '/my-queried', name: 'MyQueried', component: MyQueried},
+                {path: '/query', name: "Query", component: Query},
+                {path: '/my-merchant', name: "MyMerchant", component: MyMerchant},
+                {path: '/my-own-platform/client', name: "MyOwnClient", component: MyOwnClient},
             ]
         },
     ]
@@ -55,11 +47,26 @@ const router = new Router({
 // 添加路由守卫
 router.beforeEach((to, from, next) => {
     const isLogin = localStorage.eleToken ? true : false;
+    if (localStorage.getItem('im') * 1 === 1) {
+        localStorage.setItem('im', '0')
+    } else {
+        localStorage.setItem('needLogin', "0");
+    }
     if (to.path == "/login" || to.path == "/register") {
         next();
     } else {
-        isLogin ? next() : next("/login");
-      }
+        if (isLogin) {
+            next();
+        } else {
+            localStorage.setItem('needLogin', "1");
+            localStorage.setItem('im', "1");
+            // console.log("reset");
+            // console.log(localStorage.needLogin);
+            // console.log(localStorage.getItem('needLogin'));
+            // Vue.$message('请先登录');
+            next("/login");
+        }
+    }
 });
 
 export default router;

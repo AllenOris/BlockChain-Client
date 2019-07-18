@@ -8,11 +8,13 @@ import axios from './http'
 // import VueCookies from 'vue-cookies'
 import VueRouter from 'vue-router'
 
-Vue.use(VueRouter);
-// Vue.http.options.credentials = true;
+
 
 // Vue.use(VueCookies);
-Vue.use(ElementUI);
+// Vue.use(ElementUI);
+
+Vue.use(VueRouter);
+// Vue.http.options.credentials = true;
 
 Vue.prototype.$axios = axios;
 Vue.prototype.$http = axios;
