@@ -73,6 +73,7 @@
                     value: '2',
                     label: '资金方'
                 }],
+                beginTime: "", endTime: "",
             };
         },
         created() {
@@ -113,6 +114,7 @@
                 let name = this.loginUser.name;
                 let password = this.loginUser.password;
                 console.log(this.loginUser, name, password);
+                this.beginTime = +new Date();
                 this.$refs[formName].validate(valid => {
                     if (valid) {
                         let js = {
@@ -125,6 +127,8 @@
                             this.$axios.post("/borrowers/login", js).then(res => {
                                 if (res.data.code * 1 === 0) {
                                     // 登录成功
+                                    this.endTime = +new Date();
+
                                     const token = res.data.data['access-token'];
                                     console.log("res:", res.data, token);
                                     localStorage.setItem('eleToken', token);

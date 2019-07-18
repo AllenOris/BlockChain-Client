@@ -51,6 +51,8 @@
         data() {
             return {
                 tableData: [],
+                beginTime: "",
+                endTime: "",
             }
         },
         created() {
@@ -59,12 +61,22 @@
         methods: {
             getProfile() {
                 let js = {};
+                this.beginTime = +new Date();
                 this.$axios.post("/borrowers/search-query", js,
                     {
                         params: {access_token: localStorage.getItem('eleToken')}
                     }).then(res => {
                     // 登录成功
                     if (res.data.code * 1 === 0) {
+                        this.endTime = +new Date();
+                        this.$notify({
+                            title: '区块链时间',
+                            dangerouslyUseHTMLString: true,
+                            message: (this.endTime - this.beginTime) / 1000 + "s",
+                            duration: 15000,
+                            type: "info",
+                            offset: 400,
+                        });
                         this.$message({message: "查询成功", type: "success"});
                         console.log(res.data);
                         this.tableData = [];
