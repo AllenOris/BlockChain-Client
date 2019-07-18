@@ -201,7 +201,7 @@
         position: relative;
         width: 100%;
         height: 100%;
-        background: url(../assets/bg2.jpg) no-repeat center center;
+        background: url(../assets/01.jpeg) no-repeat center center;
         background-size: 100% 100%;
     }
 

@@ -65,7 +65,7 @@
                 </el-form-item>
             </el-form>
             <div slot="footer" class="dialog-footer">
-                <el-button @click="dialogFormVisible = false">取 消</el-button>
+                <el-button @click="dialogVisible2 = false">取 消</el-button>
                 <el-button type="primary" @click="handleClick">查 询</el-button>
             </div>
         </el-dialog>
@@ -156,7 +156,6 @@
                     {"value": '信用评估'},
                     {"value": '贷前认证'},
                     {"value": '贷后清算'},
-                    {"value": "validation"}
                 ];
             },
             handleSelect(item) {

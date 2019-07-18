@@ -35,10 +35,7 @@
         name: "Query",
         data() {
             return {
-                tableData: {
-                    name: ["姓名", "身份证", "性别", "出生日期", "住址", "手机号", "银行卡号"],
-                    value: []
-                },
+                tableData:[],
                 userTypeName: "",
             }
         },
@@ -63,14 +60,14 @@
                             this.$message({message: "查询成功", type: "success"});
                             console.log(res.data);
                             let data = res.data.data;
-                            this.tableData.value.push(data.name);
-                            this.tableData.value.push(data.id);
-                            this.tableData.value.push(data.gender);
-                            this.tableData.value.push(data.birth_date);
-                            this.tableData.value.push(data.address);
-                            this.tableData.value.push(data.phone);
-                            this.tableData.value.push(data.card_number);
-                            this.$message('查询成功,您的查询行为已被记入区块链网络')
+                            this.tableData.push({name: "系统编号", value: data.id});
+                            this.tableData.push({name: "姓名", value:data.name});
+                            this.tableData.push({name: "身份证号", value:data.ID_card});
+                            this.tableData.push({name: "性别", value:data.gender==='male'?'男':'女'});
+                            this.tableData.push({name: "出生日期", value:data.birth_date});
+                            this.tableData.push({name: "地址", value:data.address});
+                            this.tableData.push({name: "手机号", value:data.phone});
+                            this.tableData.push({name: "银行卡号", value:data.card_number});
                         } else {
                             this.$message.error(res.data.msg);
                         }

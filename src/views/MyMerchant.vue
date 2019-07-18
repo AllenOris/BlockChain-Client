@@ -17,7 +17,7 @@
                     style="width: 100%">
                 <el-table-column
                         prop="name"
-                        label="平台ID"
+                        label="资金方ID"
                         sortable>
                 </el-table-column>
                 <el-table-column
