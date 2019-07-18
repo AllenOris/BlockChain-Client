@@ -35,7 +35,7 @@
         name: "Query",
         data() {
             return {
-                tableData:[],
+                tableData: [],
                 userTypeName: "",
             }
         },
@@ -45,10 +45,11 @@
         methods: {
             getProfile() {
                 let userType = localStorage.getItem('userType') * 1;
-                this.userTypeName = this.userType === 0 ? '借贷方' : this.userType === 1 ? '平台方' : '商户方';
+                this.userTypeName = this.userType === 0 ? '借贷方' : this.userType === 1 ? '平台方' : '资金方';
                 let wantID = localStorage.getItem('wantID');
                 let aim = localStorage.getItem('aim');
-                let js = {id: wantID, aim: aim};
+                let js = {id: wantID, aim: aim, platform_id: localStorage.getItem('wantPlatform')};
+                console.log(js);
                 if (userType === 1) {
                     this.$axios.post("/platforms/search-specific", js,
                         {
@@ -61,13 +62,13 @@
                             console.log(res.data);
                             let data = res.data.data;
                             this.tableData.push({name: "系统编号", value: data.id});
-                            this.tableData.push({name: "姓名", value:data.name});
-                            this.tableData.push({name: "身份证号", value:data.ID_card});
-                            this.tableData.push({name: "性别", value:data.gender==='male'?'男':'女'});
-                            this.tableData.push({name: "出生日期", value:data.birth_date});
-                            this.tableData.push({name: "地址", value:data.address});
-                            this.tableData.push({name: "手机号", value:data.phone});
-                            this.tableData.push({name: "银行卡号", value:data.card_number});
+                            this.tableData.push({name: "姓名", value: data.name});
+                            this.tableData.push({name: "身份证号", value: data.ID_card});
+                            this.tableData.push({name: "性别", value: data.gender === 'male' ? '男' : '女'});
+                            this.tableData.push({name: "出生日期", value: data.birth_date});
+                            this.tableData.push({name: "地址", value: data.address});
+                            this.tableData.push({name: "手机号", value: data.phone});
+                            this.tableData.push({name: "银行卡号", value: data.card_number});
                         } else {
                             this.$message.error(res.data.msg);
                         }
@@ -75,7 +76,7 @@
                         this.$message.error(err.message);
                     });
                 } else if (userType === 2) {
-                    this.$axios.post("/merchants/search-platform", js,
+                    this.$axios.post("/merchants/search-specific", js,
                         {
                             params: {access_token: localStorage.getItem('eleToken')}
                         }).then(res => {
